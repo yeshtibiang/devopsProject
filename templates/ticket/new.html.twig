@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Ticket{% endblock %}
+
+{% block body %}
+    <div class="container mt-4 w-50 p-4" style="background-color: #212529; color: white; border-radius: 1em">
+        <h4>Formulaire de création du ticket</h4>
+        {{ form_start(form) }}
+        {{ form_row(form.shortDescription) }}
+        {{ form_row(form.description) }}
+        {# filter createdBy to only the current user #}
+        {{ form_row(form.createdBy ) }}
+        {#<button type="submit" class="btn btn-primary">Créer</button>#}
+        <button class="btn btn-secondary mb-3">{{ button_label|default('Save') }}</button>
+        {{ form_row(form._token) }}
+
+        {{ form_end(form, {render_rest: false}) }}
+        <a href="{{ path('app_ticket_index') }}">back to list</a>
+    </div>
+
+
+{% endblock %}

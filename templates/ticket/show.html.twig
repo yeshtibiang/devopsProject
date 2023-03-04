@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ticket{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>Ticket</h1>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>Numero</th>
+                <td>{{ ticket.number }}</td>
+            </tr>
+            <tr>
+                <th>Date de création</th>
+                <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Courte Description</th>
+                <td>{{ ticket.shortDescription }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ ticket.description }}</td>
+            </tr>
+
+            <tr>
+                <th>Status</th>
+                <td>{{ ticket.status }}</td>
+            </tr>
+            <tr>
+                <th>Assigné à</th>
+                {% if ticket.assignedTo %}
+                    <td>{{ ticket.assignedTo }}</td>
+                {% else %}
+                    {% if app.user %}
+                            {% set roles = ['ROLE_ADMIN', 'ROLE_AGENT']  %}
+                            {% for role in app.user.roles %}
+                                {% if role in roles and ticket.status == 'Reçu' %}
+                                    <td><a href="{{ path('app_ticket_assign', {'id': ticket.id}) }}">S'assigner</a></td>
+                                {% else %}
+                                    <td>Non assigné</td>
+                                {% endif %}
+                            {% endfor %}
+                    {% endif %}
+                {% endif %}
+            </tr>
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_ticket_index') }}">Retour à la liste</a>
+        {% if ticket.status == 'Reçu'%}
+            {% if ticket.assignedTo == app.user or app.user.roles[0] == 'ROLE_ADMIN' %}
+                <a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}">Modifier</a>
+            {% endif %}
+        {% endif %}
+        {% if "ROLE_ADMIN" in app.user.roles %}
+            {{ include('ticket/_delete_form.html.twig') }}
+        {% endif %}
+    </div>
+
+
+
+{% endblock %}

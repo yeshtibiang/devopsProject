@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ticket index{% endblock %}
+
+{% block body %}
+    <div class="container mt-5 bg-light p-4">
+        <h1>Tickets</h1>
+
+        <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Numero</th>
+                <th>Créé le</th>
+                <th>ShortDescription</th>
+                <th>Status</th>
+                <th>Créé par</th>
+                <th>Assigné To</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.number }}</td>
+                    <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ ticket.shortDescription }}</td>
+                    <td>{{ ticket.status }}</td>
+                    <td>{{ ticket.createdBy }}</td>
+                    {% if ticket.assignedTo  %}
+                        <td>{{ ticket.assignedTo }}</td>
+                    {% else %}
+                        <td>Non assigné</td>
+                    {% endif %}
+
+                    <td>
+                        <a href="{{ path('app_ticket_show', {'id': ticket.id}) }}" class="btn">Détails <i class="bi bi-card-text"></i></a>
+                        {# uniquement si l'utilisateur est assigné à cet ticket #}
+                        {% if ticket.assignedTo == app.user or app.user.roles[0] == 'ROLE_ADMIN' %}
+                            <a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}" class="btn">Modifier <i class="bi bi-pencil-square"></i></a>
+
+                        {% endif %}
+
+                        {#<a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}">edit</a>#}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucuns Tickets disponibles!!!</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_ticket_new') }}" class="btn btn-secondary">Créer</a>
+    </div>
+
+{% endblock %}

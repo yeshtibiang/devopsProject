@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="container mt-4 w-50 p-4 mb-5" style="background-color: #212529; color: white; border-radius: 1em">
+        <h1>Register</h1>
+
+        {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+        {{ form_row(registrationForm.firstName) }}
+        {{ form_row(registrationForm.lastName) }}
+        {{ form_row(registrationForm.telephone) }}
+        {{ form_row(registrationForm.roles) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+        <button type="submit" class="btn btn-secondary">Register</button>
+        {{ form_end(registrationForm) }}
+    </div>
+
+{% endblock %}
